@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.mooncloak.kodetools.webview.*
+import kotlin.jvm.JvmName
 
 @Composable
 public fun WebView(
@@ -23,6 +24,7 @@ public fun WebView(
     )
 }
 
+@JvmName("WebViewGeneric")
 @Composable
 public inline fun <reified State : WebViewState, reified Navigator : WebViewNavigator> WebView(
     modifier: Modifier = Modifier,
