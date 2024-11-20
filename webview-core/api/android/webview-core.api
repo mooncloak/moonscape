@@ -1,3 +1,86 @@
+public class com/mooncloak/kodetools/webview/AndroidWebChromeClient : android/webkit/WebChromeClient {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun getState ()Lcom/mooncloak/kodetools/webview/AndroidWebViewState;
+	public fun onProgressChanged (Landroid/webkit/WebView;I)V
+	public fun onReceivedIcon (Landroid/webkit/WebView;Landroid/graphics/Bitmap;)V
+	public fun onReceivedTitle (Landroid/webkit/WebView;Ljava/lang/String;)V
+}
+
+public class com/mooncloak/kodetools/webview/AndroidWebViewClient : android/webkit/WebViewClient {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun doUpdateVisitedHistory (Landroid/webkit/WebView;Ljava/lang/String;Z)V
+	public fun getNavigator ()Lcom/mooncloak/kodetools/webview/AndroidWebViewNavigator;
+	public fun getState ()Lcom/mooncloak/kodetools/webview/AndroidWebViewState;
+	public fun onPageFinished (Landroid/webkit/WebView;Ljava/lang/String;)V
+	public fun onPageStarted (Landroid/webkit/WebView;Ljava/lang/String;Landroid/graphics/Bitmap;)V
+	public fun onReceivedError (Landroid/webkit/WebView;Landroid/webkit/WebResourceRequest;Landroid/webkit/WebResourceError;)V
+}
+
+public final class com/mooncloak/kodetools/webview/AndroidWebViewComponentFactory : com/mooncloak/kodetools/webview/WebViewComponentFactory {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)V
+	public synthetic fun <init> (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun createWebViewContentProvider ()Lcom/mooncloak/kodetools/webview/WebViewContentProvider;
+	public fun createWebViewNavigator ()Lcom/mooncloak/kodetools/webview/AndroidWebViewNavigator;
+	public synthetic fun createWebViewNavigator ()Lcom/mooncloak/kodetools/webview/WebViewNavigator;
+	public fun createWebViewState (Lcom/mooncloak/kodetools/webview/WebContent;)Lcom/mooncloak/kodetools/webview/AndroidWebViewState;
+	public synthetic fun createWebViewState (Lcom/mooncloak/kodetools/webview/WebContent;)Lcom/mooncloak/kodetools/webview/WebViewState;
+	public fun createWebViewStateSaver ()Landroidx/compose/runtime/saveable/Saver;
+}
+
+public final class com/mooncloak/kodetools/webview/AndroidWebViewContentProvider : com/mooncloak/kodetools/webview/WebViewContentProvider {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)V
+	public synthetic fun <init> (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun Content (Lcom/mooncloak/kodetools/webview/AndroidWebViewState;Lcom/mooncloak/kodetools/webview/AndroidWebViewNavigator;Landroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;I)V
+	public synthetic fun Content (Lcom/mooncloak/kodetools/webview/WebViewState;Lcom/mooncloak/kodetools/webview/WebViewNavigator;Landroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;I)V
+}
+
+public final class com/mooncloak/kodetools/webview/AndroidWebViewContentProviderKt {
+	public static final fun UseAndroidWebView (Lcom/mooncloak/kodetools/webview/WebViewComponentFactory;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun getAndroidWebStateSaver ()Landroidx/compose/runtime/saveable/Saver;
+}
+
+public final class com/mooncloak/kodetools/webview/AndroidWebViewNavigator : com/mooncloak/kodetools/webview/WebViewNavigator {
+	public static final field $stable I
+	public fun <init> (Lcom/mooncloak/kodetools/webview/WebViewNavigator$NavigationEvent;)V
+	public fun evaluateJavaScript (Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getCanGoBack ()Z
+	public fun getCanGoForward ()Z
+	public fun getEvent ()Lcom/mooncloak/kodetools/webview/WebViewNavigator$NavigationEvent;
+	public fun getRecentEvents ()Ljava/util/List;
+	public fun loadHtml (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun loadHtmlFile (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun loadUrl (Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun navigateBack (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun navigateForward (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun postUrl (Ljava/lang/String;[BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun reload (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun stopLoading (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/mooncloak/kodetools/webview/AndroidWebViewState : com/mooncloak/kodetools/webview/WebViewState {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Lcom/mooncloak/kodetools/webview/WebContent;Lcom/mooncloak/kodetools/webview/WebSettings;)V
+	public synthetic fun <init> (Lcom/mooncloak/kodetools/webview/WebContent;Lcom/mooncloak/kodetools/webview/WebSettings;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getContent ()Lcom/mooncloak/kodetools/webview/WebContent;
+	public fun getErrorsForCurrentRequest ()Landroidx/compose/runtime/snapshots/SnapshotStateList;
+	public synthetic fun getErrorsForCurrentRequest ()Ljava/util/List;
+	public fun getLastLoadedUrl ()Ljava/lang/String;
+	public fun getLoadingState ()Lcom/mooncloak/kodetools/webview/LoadingState;
+	public final fun getPageIcon ()Landroid/graphics/Bitmap;
+	public fun getPageTitle ()Ljava/lang/String;
+	public fun getSettings ()Lcom/mooncloak/kodetools/webview/WebSettings;
+	public final fun getViewState ()Landroid/os/Bundle;
+	public fun isLoading ()Z
+	public fun setContent (Lcom/mooncloak/kodetools/webview/WebContent;)V
+}
+
 public abstract interface class com/mooncloak/kodetools/webview/LoadingState {
 	public static final field Companion Lcom/mooncloak/kodetools/webview/LoadingState$Companion;
 }
@@ -278,17 +361,18 @@ public final class com/mooncloak/kodetools/webview/WebViewContentProvider$Compan
 
 public final class com/mooncloak/kodetools/webview/WebViewError {
 	public static final field $stable I
-	public fun <init> (ILjava/lang/String;ZLjava/lang/Throwable;)V
-	public synthetic fun <init> (ILjava/lang/String;ZLjava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()I
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Integer;Ljava/lang/String;ZLjava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/Integer;Ljava/lang/String;ZLjava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Integer;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Z
 	public final fun component4 ()Ljava/lang/Throwable;
-	public final fun copy (ILjava/lang/String;ZLjava/lang/Throwable;)Lcom/mooncloak/kodetools/webview/WebViewError;
-	public static synthetic fun copy$default (Lcom/mooncloak/kodetools/webview/WebViewError;ILjava/lang/String;ZLjava/lang/Throwable;ILjava/lang/Object;)Lcom/mooncloak/kodetools/webview/WebViewError;
+	public final fun copy (Ljava/lang/Integer;Ljava/lang/String;ZLjava/lang/Throwable;)Lcom/mooncloak/kodetools/webview/WebViewError;
+	public static synthetic fun copy$default (Lcom/mooncloak/kodetools/webview/WebViewError;Ljava/lang/Integer;Ljava/lang/String;ZLjava/lang/Throwable;ILjava/lang/Object;)Lcom/mooncloak/kodetools/webview/WebViewError;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getCause ()Ljava/lang/Throwable;
-	public final fun getCode ()I
+	public final fun getCode ()Ljava/lang/Integer;
 	public final fun getDescription ()Ljava/lang/String;
 	public fun hashCode ()I
 	public final fun isFromMainFrame ()Z
@@ -390,7 +474,7 @@ public final class com/mooncloak/kodetools/webview/WebViewNavigator$NavigationEv
 	public final fun copy (Ljava/lang/String;)Lcom/mooncloak/kodetools/webview/WebViewNavigator$NavigationEvent$LoadHtmlFile;
 	public static synthetic fun copy$default (Lcom/mooncloak/kodetools/webview/WebViewNavigator$NavigationEvent$LoadHtmlFile;Ljava/lang/String;ILjava/lang/Object;)Lcom/mooncloak/kodetools/webview/WebViewNavigator$NavigationEvent$LoadHtmlFile;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getFileName ()Ljava/lang/String;
+	public final fun getPath ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -453,7 +537,6 @@ public abstract interface class com/mooncloak/kodetools/webview/WebViewState {
 	public abstract fun getPageTitle ()Ljava/lang/String;
 	public abstract fun getSettings ()Lcom/mooncloak/kodetools/webview/WebSettings;
 	public abstract fun isLoading ()Z
-	public abstract fun setPageTitle (Ljava/lang/String;)V
 }
 
 public final class com/mooncloak/kodetools/webview/WebViewState$Companion {
