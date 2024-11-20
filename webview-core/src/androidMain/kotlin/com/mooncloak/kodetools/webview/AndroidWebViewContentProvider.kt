@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.viewinterop.AndroidView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
@@ -191,6 +192,37 @@ public class AndroidWebViewContentProvider public constructor(
 
                     webChromeClient = chromeClient
                     webViewClient = client
+
+                    // Avoid covering other components
+                    this.setLayerType(state.settings.androidWebSettings.layerType, null)
+
+                    settings.apply {
+                        state.settings.let {
+                            javaScriptEnabled = it.isJavaScriptEnabled
+                            userAgentString = it.customUserAgentString
+                            allowFileAccessFromFileURLs = it.allowFileAccessFromFileURLs
+                            allowUniversalAccessFromFileURLs = it.allowUniversalAccessFromFileURLs
+                            setSupportZoom(it.supportZoom)
+                        }
+
+                        state.settings.androidWebSettings.let {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                safeBrowsingEnabled = it.safeBrowsingEnabled
+                            }
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                isAlgorithmicDarkeningAllowed = it.isAlgorithmicDarkeningAllowed
+                            }
+                            setBackgroundColor(state.settings.backgroundColor.toArgb())
+                            allowFileAccess = it.allowFileAccess
+                            textZoom = it.textZoom
+                            useWideViewPort = it.useWideViewPort
+                            standardFontFamily = it.standardFontFamily
+                            defaultFontSize = it.defaultFontSize
+                            loadsImagesAutomatically = it.loadsImagesAutomatically
+                            domStorageEnabled = it.domStorageEnabled
+                            mediaPlaybackRequiresUserGesture = it.mediaPlaybackRequiresUserGesture
+                        }
+                    }
                 }.also { state.webView = it }
             },
             modifier = modifier,
@@ -342,8 +374,10 @@ public class AndroidWebViewNavigator public constructor(
 
     override val event: WebViewNavigator.NavigationEvent by mutableEvent
 
+    private val mutableRecentEvents = mutableStateListOf<WebViewNavigator.NavigationEvent>()
+
     override val recentEvents: List<WebViewNavigator.NavigationEvent>
-        get() = TODO("Not yet implemented")
+        get() = mutableRecentEvents
 
     /**
      * True when the web view is able to navigate backwards, false otherwise.
@@ -360,12 +394,12 @@ public class AndroidWebViewNavigator public constructor(
     private val mutex = Mutex(locked = false)
 
     public override suspend fun loadUrl(url: String, additionalHttpHeaders: Map<String, String>) {
-        mutex.withLock {
-            mutableEvent.value = WebViewNavigator.NavigationEvent.LoadUrl(
+        emit(
+            WebViewNavigator.NavigationEvent.LoadUrl(
                 url,
                 additionalHttpHeaders
             )
-        }
+        )
     }
 
     public override suspend fun loadHtml(
@@ -375,78 +409,63 @@ public class AndroidWebViewNavigator public constructor(
         encoding: String?,
         historyUrl: String?
     ) {
-        mutex.withLock {
-            mutableEvent.value = WebViewNavigator.NavigationEvent.LoadHtml(
+        emit(
+            WebViewNavigator.NavigationEvent.LoadHtml(
                 html,
                 baseUrl,
                 mimeType,
                 encoding,
                 historyUrl
             )
-        }
+        )
     }
 
     override suspend fun loadHtmlFile(path: String) {
-        mutex.withLock {
-            mutableEvent.value = WebViewNavigator.NavigationEvent.LoadHtmlFile(path = path)
-        }
+        emit(WebViewNavigator.NavigationEvent.LoadHtmlFile(path = path))
     }
 
     public override suspend fun postUrl(
         url: String,
         postData: ByteArray
     ) {
-        mutex.withLock {
-            mutableEvent.value = WebViewNavigator.NavigationEvent.PostUrl(
-                url,
-                postData
-            )
-        }
+        emit(WebViewNavigator.NavigationEvent.PostUrl(url, postData))
     }
 
     override suspend fun evaluateJavaScript(script: String, callback: ((String) -> Unit)?) {
-        mutex.withLock {
-            mutableEvent.value = WebViewNavigator.NavigationEvent.EvaluateJavaScript(
+        emit(
+            WebViewNavigator.NavigationEvent.EvaluateJavaScript(
                 script = script,
                 callback = callback
             )
-        }
+        )
     }
 
     /**
      * Navigates the webview back to the previous page.
      */
     public override suspend fun navigateBack() {
-        mutex.withLock {
-            mutableEvent.value = WebViewNavigator.NavigationEvent.Back
-        }
+        emit(WebViewNavigator.NavigationEvent.Back)
     }
 
     /**
      * Navigates the webview forward after going back from a page.
      */
     public override suspend fun navigateForward() {
-        mutex.withLock {
-            mutableEvent.value = WebViewNavigator.NavigationEvent.Forward
-        }
+        emit(WebViewNavigator.NavigationEvent.Forward)
     }
 
     /**
      * Reloads the current page in the webview.
      */
     public override suspend fun reload() {
-        mutex.withLock {
-            mutableEvent.value = WebViewNavigator.NavigationEvent.Reload
-        }
+        emit(WebViewNavigator.NavigationEvent.Reload)
     }
 
     /**
      * Stops the current page load (if one is loading).
      */
     public override suspend fun stopLoading() {
-        mutex.withLock {
-            mutableEvent.value = WebViewNavigator.NavigationEvent.StopLoading
-        }
+        emit(WebViewNavigator.NavigationEvent.StopLoading)
     }
 
     // Use Dispatchers.Main to ensure that the webview methods are called on UI thread
@@ -485,6 +504,20 @@ public class AndroidWebViewNavigator public constructor(
 
                     is WebViewNavigator.NavigationEvent.LoadHtmlFile -> TODO()
                 }
+            }
+        }
+    }
+
+    private suspend fun emit(event: WebViewNavigator.NavigationEvent) {
+        mutex.withLock {
+            mutableEvent.value = event
+
+            if (mutableRecentEvents.size > 100) { // arbitrary size check to not let the "recent" events get too large
+                mutableRecentEvents.removeRange(0, mutableRecentEvents.size / 2)
+
+                mutableRecentEvents.add(event)
+            } else {
+                mutableRecentEvents.add(event)
             }
         }
     }
