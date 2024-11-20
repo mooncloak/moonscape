@@ -15,8 +15,8 @@ import androidx.compose.runtime.Immutable
  */
 @Immutable
 public data class WebViewError public constructor(
-    public val code: Int,
-    public val description: String,
+    public val code: Int? = null,
+    public val description: String? = null,
     public val isFromMainFrame: Boolean = false,
     public val cause: Throwable? = null
 )

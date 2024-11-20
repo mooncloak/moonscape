@@ -1,6 +1,7 @@
 package com.mooncloak.kodetools.webview
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 
@@ -105,31 +106,37 @@ public interface WebViewNavigator {
     /**
      * Sealed class for constraining possible navigation events.
      */
+    @Immutable
     public sealed interface NavigationEvent {
 
         /**
          * Navigate back event.
          */
+        @Immutable
         public data object Back : NavigationEvent
 
         /**
          * Navigate forward event.
          */
+        @Immutable
         public data object Forward : NavigationEvent
 
         /**
          * Reload event.
          */
+        @Immutable
         public data object Reload : NavigationEvent
 
         /**
          * Stop loading event.
          */
+        @Immutable
         public data object StopLoading : NavigationEvent
 
         /**
          * Load url event.
          */
+        @Immutable
         public data class LoadUrl public constructor(
             public val url: String,
             public val additionalHttpHeaders: Map<String, String> = emptyMap(),
@@ -138,6 +145,7 @@ public interface WebViewNavigator {
         /**
          * Load html event.
          */
+        @Immutable
         public data class LoadHtml public constructor(
             public val html: String,
             public val baseUrl: String? = null,
@@ -146,13 +154,15 @@ public interface WebViewNavigator {
             public val historyUrl: String? = null,
         ) : NavigationEvent
 
+        @Immutable
         public data class LoadHtmlFile public constructor(
-            val fileName: String,
+            public val path: String,
         ) : NavigationEvent
 
         /**
          * Post url event.
          */
+        @Immutable
         public data class PostUrl public constructor(
             public val url: String,
             public val postData: ByteArray,
@@ -180,6 +190,7 @@ public interface WebViewNavigator {
         /**
          * Evaluate javascript event.
          */
+        @Immutable
         public data class EvaluateJavaScript public constructor(
             public val script: String,
             public val callback: ((String) -> Unit)?,

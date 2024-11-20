@@ -37,6 +37,14 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
+
+        val androidMain by getting {
+            dependencies {
+                implementation(compose.foundation)
+
+                implementation(AndroidX.activity.compose)
+            }
+        }
     }
 }
 

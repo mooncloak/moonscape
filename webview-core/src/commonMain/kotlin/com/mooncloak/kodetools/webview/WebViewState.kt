@@ -37,7 +37,7 @@ public interface WebViewState {
     /**
      * The title received from the loaded content of the current page
      */
-    public var pageTitle: String?
+    public val pageTitle: String?
 
     /**
      * A list for errors captured in the last load. Reset when a new page is loaded.
