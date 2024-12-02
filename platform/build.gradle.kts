@@ -6,7 +6,7 @@ plugins {
     id("org.jetbrains.dokka")
     id("org.jetbrains.compose")
     id("org.jetbrains.kotlin.plugin.compose")
-    id("moonscape.compose")
+    id("moonscape.multiplatform")
     id("moonscape.publish")
 }
 
@@ -21,14 +21,8 @@ kotlin {
 
         val commonMain by getting {
             dependencies {
-                // Coroutines
-                // https://github.com/Kotlin/kotlinx.coroutines
-                implementation(KotlinX.coroutines.core)
-
                 // Declarative UI - Compose Multiplatform
                 implementation(compose.runtime)
-                implementation(compose.runtimeSaveable)
-                implementation(compose.ui)
             }
         }
 
@@ -37,20 +31,12 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-
-        val androidMain by getting {
-            dependencies {
-                implementation(compose.foundation)
-
-                implementation(AndroidX.activity.compose)
-            }
-        }
     }
 }
 
 android {
     compileSdk = LibraryConstants.Android.compileSdkVersion
-    namespace = "com.mooncloak.moonscape.webview"
+    namespace = "com.mooncloak.moonscape.platform"
 
     defaultConfig {
         minSdk = LibraryConstants.Android.minSdkVersion

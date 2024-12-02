@@ -32,4 +32,5 @@ plugins {
 rootProject.name = "moonscape"
 
 include(":webview-core")
+include(":platform")
 include(":window")

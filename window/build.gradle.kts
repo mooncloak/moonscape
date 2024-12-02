@@ -6,7 +6,7 @@ plugins {
     id("org.jetbrains.dokka")
     id("org.jetbrains.compose")
     id("org.jetbrains.kotlin.plugin.compose")
-    id("moonscape.multiplatform")
+    id("moonscape.compose")
     id("moonscape.publish")
 }
 
@@ -29,6 +29,8 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.runtimeSaveable)
                 implementation(compose.ui)
+                implementation(compose.foundation)
+                implementation(compose.material3)
             }
         }
 
@@ -40,8 +42,6 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-                implementation(compose.foundation)
-
                 implementation(AndroidX.activity.compose)
             }
         }
