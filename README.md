@@ -1,8 +1,8 @@
-# webview
+# moonscape
 
-Compose multiplatform WebView abstraction.
+Browser UI components for Compose Multiplatform.
 
-<img alt="GitHub tag (latest by date)" src="https://img.shields.io/github/v/tag/mooncloak/webview">
+<img alt="GitHub tag (latest by date)" src="https://img.shields.io/github/v/tag/mooncloak/moonscape">
 
 ## Status ⚠️
 
@@ -16,7 +16,7 @@ Compose multiplatform WebView abstraction.
 
 Checkout the [releases page](https://github.com/mooncloak/webview/releases) to get the latest version.
 <br/><br/>
-<img alt="GitHub tag (latest by date)" src="https://img.shields.io/github/v/tag/mooncloak/webview">
+<img alt="GitHub tag (latest by date)" src="https://img.shields.io/github/v/tag/mooncloak/moonscape">
 
 ### Repository
 
@@ -29,7 +29,7 @@ repositories {
 ### Dependencies
 
 ```kotlin
-implementation("com.mooncloak.kodetools.webview:webview-core:VERSION")
+implementation("com.mooncloak.moonscape:webview-core:VERSION")
 ```
 
 ## Documentation 📃

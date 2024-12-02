@@ -6,9 +6,9 @@ authors:
 contact:
     - alias: "kodetools@mooncloak.com"
       website: "https://kodetools.mooncloak.codes"
-title: "webview"
+title: "moonscape"
 type: "software"
-abstract: "Compose Multiplatform WebView abstraction."
+abstract: "Browser UI components for Compose Multiplatform."
 license: "Apache-2.0"
 keywords:
     - "kotlin"
@@ -16,5 +16,7 @@ keywords:
     - "compose"
     - "webview"
     - "web"
-repository-code: "https://github.com/mooncloak/webview"
-url: "https://github.com/mooncloak/webview"
+    - "browser"
+    - "moonscape"
+repository-code: "https://github.com/mooncloak/moonscape"
+url: "https://github.com/mooncloak/moonscape"

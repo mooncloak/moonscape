@@ -8,7 +8,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.20" apply false
     id("org.jetbrains.dokka")
     id("org.jetbrains.kotlinx.binary-compatibility-validator")
-    id("webview.variables")
+    id("moonscape.variables")
 }
 
 tasks.named<org.jetbrains.dokka.gradle.DokkaMultiModuleTask>("dokkaGfmMultiModule").configure {

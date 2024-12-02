@@ -64,9 +64,9 @@ afterEvaluate {
 
 fun MavenPublication.mavenCentralPom() {
     pom {
-        name.set("webview")
-        description.set("Compose Multiplatform WebView abstraction.")
-        url.set("https://github.com/mooncloak/webview")
+        name.set("moonscape")
+        description.set("Browser UI components for Compose Multiplatform.")
+        url.set("https://github.com/mooncloak/moonscape")
 
         organization {
             url.set("https://mooncloak.com")
@@ -74,7 +74,7 @@ fun MavenPublication.mavenCentralPom() {
         }
 
         issueManagement {
-            url.set("https://github.com/mooncloak/webview/issues")
+            url.set("https://github.com/mooncloak/moonscape/issues")
             system.set("Github Issues")
         }
 
@@ -90,14 +90,14 @@ fun MavenPublication.mavenCentralPom() {
                 id.set("ckeenan")
                 name.set("Chris Keenan")
                 url.set("https://github.com/chRyNaN")
-                roles.set(setOf("Primary webview developer. 💪"))
+                roles.set(setOf("Primary moonscape developer. 💪"))
             }
         }
 
         scm {
-            connection.set("https://github.com/mooncloak/webview.git")
-            developerConnection.set("https://github.com/mooncloak/webview.git")
-            url.set("https://github.com/mooncloak/webview")
+            connection.set("https://github.com/mooncloak/moonscape.git")
+            developerConnection.set("https://github.com/mooncloak/moonscape.git")
+            url.set("https://github.com/mooncloak/moonscape")
         }
     }
 }

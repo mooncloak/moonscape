@@ -10,8 +10,8 @@ dependencies {
 }
 
 gradlePlugin {
-    plugins.register("webview.variables") {
-        id = "webview.variables"
+    plugins.register("moonscape.variables") {
+        id = "moonscape.variables"
         implementationClass = "BuildVariablesPlugin"
     }
 }

@@ -6,8 +6,8 @@ plugins {
     id("org.jetbrains.dokka")
     id("org.jetbrains.compose")
     id("org.jetbrains.kotlin.plugin.compose")
-    id("webview.multiplatform")
-    id("webview.publish")
+    id("moonscape.multiplatform")
+    id("moonscape.publish")
 }
 
 kotlin {
