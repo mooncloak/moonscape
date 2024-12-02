@@ -50,7 +50,7 @@ kotlin {
 
 android {
     compileSdk = LibraryConstants.Android.compileSdkVersion
-    namespace = "com.mooncloak.moonscape.webview"
+    namespace = "com.mooncloak.moonscape.window"
 
     defaultConfig {
         minSdk = LibraryConstants.Android.minSdkVersion
