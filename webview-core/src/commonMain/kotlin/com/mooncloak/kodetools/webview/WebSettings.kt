@@ -176,7 +176,7 @@ import androidx.compose.ui.graphics.Color
  * @property [hideDefaultVideoPoster] Controls whether the default video poster (a gray, pixelated play button)
  * should be hidden.
  *
- * @property [layerType] The Layer Type of the WebView. Default is [LayerType.HARDWARE]
+ * @property [layerType] The Layer Type of the WebView. Default is [LayerType.Hardware]
  *
  * @property [opaque] The ios default opaque display The default value is {@code false}. When Value is true will
  * turn off these two properties: @param backgroundColor,@param underPageBackgroundColor
@@ -230,5 +230,5 @@ public data class WebSettings public constructor(
     public val allowProtectedMedia: Boolean = false,
     public val allowMidiSysexMessages: Boolean = false,
     public val hideDefaultVideoPoster: Boolean = false,
-    public val layerType: Int = LayerType.HARDWARE,
+    public val layerType: LayerType = LayerType.Hardware,
 )
