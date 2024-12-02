@@ -1,4 +1,4 @@
-package com.mooncloak.kodetools.webview
+package com.mooncloak.moonscape.webview
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable

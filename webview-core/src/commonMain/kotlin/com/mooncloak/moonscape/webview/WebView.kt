@@ -1,9 +1,8 @@
-package com.mooncloak.kodetools.webview
+package com.mooncloak.moonscape.webview
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.mooncloak.kodetools.webview.*
 import kotlin.jvm.JvmName
 
 @Composable

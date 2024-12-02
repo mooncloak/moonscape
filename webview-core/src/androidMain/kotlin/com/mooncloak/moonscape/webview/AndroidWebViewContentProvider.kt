@@ -1,4 +1,4 @@
-package com.mooncloak.kodetools.webview
+package com.mooncloak.moonscape.webview
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -194,7 +194,7 @@ public class AndroidWebViewContentProvider public constructor(
                     webViewClient = client
 
                     // Avoid covering other components
-                    this.setLayerType(state.settings.androidWebSettings.layerType, null)
+                    this.setLayerType(state.settings.layerType.value, null)
 
                     settings.apply {
                         state.settings.let {
@@ -205,7 +205,7 @@ public class AndroidWebViewContentProvider public constructor(
                             setSupportZoom(it.supportZoom)
                         }
 
-                        state.settings.androidWebSettings.let {
+                        state.settings.let {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 safeBrowsingEnabled = it.safeBrowsingEnabled
                             }
