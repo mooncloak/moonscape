@@ -1,4 +1,6 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.konan.target.Family
 
 plugins {
     kotlin("plugin.serialization")
@@ -11,6 +13,16 @@ plugins {
 }
 
 kotlin {
+    configure(targets) {
+        if (this is KotlinNativeTarget && konanTarget.family == Family.IOS) {
+            compilations.getByName("main") {
+                val objc by cinterops.creating {
+                    defFile(project.file("src/iosMain/def/objc.def"))
+                }
+            }
+        }
+    }
+
     sourceSets {
         all {
             // Disable warnings and errors related to these expected @OptIn annotations.
@@ -42,6 +54,8 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
+                implementation("androidx.window:window:_")
+
                 implementation(AndroidX.activity.compose)
             }
         }

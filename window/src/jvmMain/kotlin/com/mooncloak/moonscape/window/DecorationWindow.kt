@@ -210,6 +210,11 @@ private fun WindowScope.AppWindowTitleBar(
     }
 }
 
+@Composable
+private fun test(){
+
+}
+
 private enum class WindowControlPosition {
 
     Start,
