@@ -26,7 +26,7 @@ public actual sealed interface ApplicationWindow {
 
     public actual val id: String?
 
-    public actual val type: Any?
+    public actual val type: ApplicationWindowType
 
     public actual val style: ApplicationWindowStyle?
 
@@ -71,7 +71,7 @@ public actual sealed interface ApplicationWindowManager {
     @OptIn(ExperimentalUuidApi::class)
     public suspend fun open(
         id: String? = Uuid.random().toHexString(),
-        type: Any? = null,
+        type: ApplicationWindowType = DefaultApplicationWindowType(),
         style: ApplicationWindowStyle = ApplicationWindowStyle(),
         state: WindowState = WindowState(),
         onPreviewKeyEvent: (KeyEvent) -> Boolean = { false },
@@ -211,7 +211,7 @@ internal fun ApplicationWindowContent(
 
 internal operator fun ApplicationWindow.Companion.invoke(
     id: String?,
-    type: Any?,
+    type: ApplicationWindowType,
     style: ApplicationWindowStyle?,
     state: WindowState,
     onPreviewKeyEvent: (KeyEvent) -> Boolean = { false },
@@ -230,7 +230,7 @@ internal operator fun ApplicationWindow.Companion.invoke(
 @Stable
 internal class JvmApplicationWindow internal constructor(
     override val id: String?,
-    override val type: Any?,
+    override val type: ApplicationWindowType,
     initialStyle: ApplicationWindowStyle?,
     override val state: WindowState,
     override val onPreviewKeyEvent: (KeyEvent) -> Boolean = { false },
@@ -318,7 +318,7 @@ internal class JvmApplicationWindowManager internal constructor(
 
     override suspend fun open(
         id: String?,
-        type: Any?,
+        type: ApplicationWindowType,
         style: ApplicationWindowStyle,
         state: WindowState,
         onPreviewKeyEvent: (KeyEvent) -> Boolean,
@@ -338,10 +338,19 @@ internal class JvmApplicationWindowManager internal constructor(
             )
 
             if (index == -1) {
+                if (!type.multiple) {
+                    mutableWindows.removeIf { window -> window.type == type }
+                }
+
                 mutableWindows.add(newWindow)
             } else {
                 mutableWindows.removeAt(index)
+
                 mutableWindows.add(index, newWindow)
+
+                if (!type.multiple) {
+                    mutableWindows.removeIf { window -> window != newWindow && window.type == type }
+                }
             }
 
             return newWindow

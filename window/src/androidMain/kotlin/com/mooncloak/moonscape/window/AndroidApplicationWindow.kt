@@ -9,7 +9,7 @@ public actual sealed interface ApplicationWindow {
 
     public actual val id: String?
 
-    public actual val type: Any?
+    public actual val type: ApplicationWindowType
 
     public actual val style: ApplicationWindowStyle?
 
@@ -40,7 +40,7 @@ internal data object ApplicationWindowSingleton : ApplicationWindow {
 
     override val id: String = "singleton"
 
-    override val type: Any? = null
+    override val type: ApplicationWindowType = DefaultApplicationWindowType()
 
     override val style: ApplicationWindowStyle? = null
 }

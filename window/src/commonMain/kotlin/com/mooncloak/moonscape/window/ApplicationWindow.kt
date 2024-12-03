@@ -28,7 +28,7 @@ public expect sealed interface ApplicationWindow {
     /**
      * A value that is used to group [ApplicationWindow]s by a type.
      */
-    public val type: Any?
+    public val type: ApplicationWindowType
 
     /**
      * The style details for this [ApplicationWindow], or `null` if it is not available. Note that some platforms may
@@ -57,6 +57,41 @@ public expect fun rememberApplicationWindowManager(): ApplicationWindowManager
 public expect fun ApplicationWindowContainer(
     manager: ApplicationWindowManager = rememberApplicationWindowManager()
 )
+
+/**
+ * Represents a category for an [ApplicationWindow].
+ *
+ * > [!Note]
+ * > Implementations of this interface MUST adhere to the [Stable] annotation requirements.
+ */
+@Stable
+public interface ApplicationWindowType {
+
+    /**
+     * The name for this [ApplicationWindowType]. This value could be useful for logging purposes.
+     */
+    public val name: String
+
+    /**
+     * Whether multiple [ApplicationWindow]s of this [ApplicationWindowType] can exist within a
+     * [ApplicationWindowManager.windows] list at a time. When opening an [ApplicationWindow] via an
+     * [ApplicationWindowManager], if this value is `true`, then the [ApplicationWindow] will be opened and added to
+     * the [ApplicationWindowManager.windows] list, otherwise, if this value is `false`, then the newly opened
+     * [ApplicationWindow] will replace any existing [ApplicationWindow] with the same type in the
+     * [ApplicationWindowManager.windows] list.
+     */
+    public val multiple: Boolean
+
+    public companion object
+}
+
+@Immutable
+public data class DefaultApplicationWindowType public constructor(
+    public override val multiple: Boolean = true
+) : ApplicationWindowType {
+
+    override val name: String = "default"
+}
 
 @Immutable
 public sealed interface ApplicationWindowDecoration {
