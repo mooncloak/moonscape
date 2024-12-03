@@ -38,9 +38,15 @@ public actual sealed interface ApplicationWindow {
 
     public val content: @Composable FrameWindowScope.() -> Unit
 
-    public suspend fun hide()
+    public suspend fun updateStyle(block: ApplicationWindowStyle.() -> ApplicationWindowStyle)
 
-    public suspend fun show()
+    public suspend fun hide() {
+        updateStyle { this.copy(visible = false) }
+    }
+
+    public suspend fun show() {
+        updateStyle { this.copy(visible = true) }
+    }
 
     public suspend fun toggleVisibility() {
         if (style?.visible == true) {
@@ -238,20 +244,12 @@ internal class JvmApplicationWindow internal constructor(
 
     private val mutex = Mutex(locked = false)
 
-    override suspend fun hide() {
+    override suspend fun updateStyle(block: ApplicationWindowStyle.() -> ApplicationWindowStyle) {
         mutex.withLock {
             withContext(Dispatchers.Main) {
-                mutableStyle.value = mutableStyle.value?.copy(visible = false)
-                    ?: ApplicationWindowStyle(visible = false)
-            }
-        }
-    }
+                val currentStyle = style ?: ApplicationWindowStyle()
 
-    override suspend fun show() {
-        mutex.withLock {
-            withContext(Dispatchers.Main) {
-                mutableStyle.value = mutableStyle.value?.copy(visible = true)
-                    ?: ApplicationWindowStyle(visible = true)
+                mutableStyle.value = currentStyle.block()
             }
         }
     }
