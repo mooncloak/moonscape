@@ -85,12 +85,27 @@ public interface ApplicationWindowType {
     public companion object
 }
 
+/**
+ * Represents the default [ApplicationWindowType].
+ */
 @Immutable
 public data class DefaultApplicationWindowType public constructor(
     public override val multiple: Boolean = true
 ) : ApplicationWindowType {
 
     override val name: String = "default"
+}
+
+/**
+ * Represents an [ApplicationWindowType] for picture-in-picture mode windows. These windows display on top of the other
+ * windows of the screen (see [ApplicationWindowStyle.alwaysOnTop]) and only one window is supported at a time.
+ */
+@Immutable
+public data object PictureInPictureModeWindowType : ApplicationWindowType {
+
+    override val name: String = "pip"
+
+    override val multiple: Boolean = false
 }
 
 @Immutable
