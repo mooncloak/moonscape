@@ -1,6 +1,5 @@
 package com.mooncloak.moonscape.window
 
-/*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.IndicationNodeFactory
 import androidx.compose.foundation.LocalIndication
@@ -34,7 +33,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -43,61 +41,57 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.WindowPlacement
+import androidx.compose.ui.window.WindowDecoration
+import androidx.compose.ui.window.WindowDecorationDefaults
 import androidx.compose.ui.window.WindowScope
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.rememberWindowState
-import com.mooncloak.app.info.AppClientPlatform
-import com.mooncloak.app.info.current
-import com.mooncloak.app.shared.theme.MooncloakTheme
-import com.mooncloak.app.shared.theme.ThemePreference
+import com.mooncloak.moonscape.platform.ComposeRuntimePlatform
+import com.mooncloak.moonscape.platform.current
 
 /**
  * Represents an "undecorated", mooncloak themed Window that allows for custom decorations for the
  * title bar.
  */
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-public fun MooncloakDecorationWindow(
+internal fun CustomDecorationWindow(
     state: WindowState = rememberWindowState(),
-    onClose: () -> Unit,
-    onMinimize: () -> Unit = {
-        state.isMinimized = true
-    },
-    onMaximize: () -> Unit = {
-        println("maximize: placement: ${state.placement}") // FIXME
-        if (state.placement == WindowPlacement.Maximized) {
-            WindowPlacement.Floating
-        } else {
-            WindowPlacement.Maximized // TODO: Fullscreen?
-        }
-    },
-    themePreference: ThemePreference = ThemePreference.SystemDefault,
-    titleBarState: WindowTitleBarStateHolder = rememberWindowTitleBarState(""),
+    title: String,
+    icon: Painter?,
+    onCloseRequest: () -> Unit,
+    onMinimize: () -> Unit,
+    onToggleMaximize: () -> Unit,
+    themePreference: ApplicationWindowThemePreference = ApplicationWindowThemePreference.System, // TODO: Will be used for the custom system controls.
     visible: Boolean = true,
     transparent: Boolean = false,
     resizable: Boolean = true,
     enabled: Boolean = true,
     focusable: Boolean = true,
     alwaysOnTop: Boolean = false,
+    resizerThickness: Dp = WindowDecorationDefaults.ResizerThickness,
     onPreviewKeyEvent: (KeyEvent) -> Boolean = { false },
     onKeyEvent: (KeyEvent) -> Boolean = { false },
+    titleBarContent: (@Composable RowScope.() -> Unit)? = null,
     content: @Composable FrameWindowScope.() -> Unit
 ) {
     Window(
-        onCloseRequest = onClose,
+        onCloseRequest = onCloseRequest,
         state = state,
         visible = visible,
-        title = titleBarState.titleBar.value.title ?: "",
-        icon = titleBarState.titleBar.value.icon,
-        undecorated = true,
+        title = title,
+        icon = icon,
+        decoration = WindowDecoration.Undecorated(resizerThickness = resizerThickness),
         transparent = transparent,
         resizable = resizable,
         enabled = enabled,
@@ -106,48 +100,41 @@ public fun MooncloakDecorationWindow(
         onPreviewKeyEvent = onPreviewKeyEvent,
         onKeyEvent = onKeyEvent
     ) {
-        CompositionLocalProvider(LocalWindowTitleBarState provides titleBarState) {
-            MooncloakTheme(themePreference = themePreference) {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        val platform = WindowPlatform.current
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                val platform = WindowPlatform.current
 
-                        AppWindowTitleBar(
-                            platform = platform,
-                            onClose = onClose,
-                            onMinimize = onMinimize,
-                            onMaximize = onMaximize,
-                            content = titleBarState.titleBar.value.content ?: {
-                                val title = titleBarState.titleBar.value.title
-                                val icon = titleBarState.titleBar.value.icon
+                AppWindowTitleBar(
+                    platform = platform,
+                    onClose = onCloseRequest,
+                    onMinimize = onMinimize,
+                    onMaximize = onToggleMaximize,
+                    content = titleBarContent ?: {
+                        if (icon != null) {
+                            Icon(
+                                painter = icon,
+                                contentDescription = null
+                            )
+                        }
 
-                                if (icon != null) {
-                                    Icon(
-                                        painter = icon,
-                                        contentDescription = null
-                                    )
-                                }
-
-                                if (title != null) {
-                                    Text(
-                                        modifier = Modifier.padding(start = if (icon == null) 0.dp else 8.dp),
-                                        text = title,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                }
-                            }
-                        )
-
-                        content.invoke(this@Window)
+                        if (title.isNotBlank()) {
+                            Text(
+                                modifier = Modifier.padding(start = if (icon == null) 0.dp else 8.dp),
+                                text = title,
+                                style = MaterialTheme.typography.titleMedium,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
                     }
-                }
+                )
+
+                content.invoke(this@Window)
             }
         }
     }
@@ -211,11 +198,6 @@ private fun WindowScope.AppWindowTitleBar(
     }
 }
 
-@Composable
-private fun test(){
-
-}
-
 private enum class WindowControlPosition {
 
     Start,
@@ -234,28 +216,15 @@ private enum class WindowPlatform(val position: WindowControlPosition) {
 
         val current: WindowPlatform
             @Composable
-            get() = when (val platform = AppClientPlatform.current) {
-                is AppClientPlatform.Macos -> MacOs
+            get() {
+                val platform = ComposeRuntimePlatform.current
 
-                is AppClientPlatform.Windows -> Windows
-
-                is AppClientPlatform.Linux -> Linux
-
-                is AppClientPlatform.Desktop -> {
-                    val osName = platform.platformName?.lowercase()
-
-                    when {
-                        osName == null -> Default
-                        osName.contains("mac") -> MacOs
-                        osName.contains("darwin") -> MacOs
-                        osName.contains("linux") -> Linux
-                        osName.contains("windows") -> Windows
-                        osName.contains("mingw") -> Windows
-                        else -> Default
-                    }
+                return when {
+                    platform.isMacos -> MacOs
+                    platform.isWindows -> Windows
+                    platform.isLinux -> Linux
+                    else -> Default
                 }
-
-                else -> Default
             }
     }
 }
@@ -505,4 +474,3 @@ private val MacOsMinimize: ImageVector =
             close()
         }
     }
-*/

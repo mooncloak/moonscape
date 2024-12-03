@@ -33,9 +33,19 @@ kotlin {
 
         val commonMain by getting {
             dependencies {
+                implementation(project(":platform"))
+
                 // Coroutines
                 // https://github.com/Kotlin/kotlinx.coroutines
                 implementation(KotlinX.coroutines.core)
+
+                // Serialization
+                // https://github.com/Kotlin/kotlinx.serialization
+                implementation(KotlinX.serialization.json)
+
+                // Time
+                // https://github.com/Kotlin/kotlinx-datetime
+                implementation(KotlinX.datetime)
 
                 // Declarative UI - Compose Multiplatform
                 implementation(compose.runtime)
@@ -43,6 +53,7 @@ kotlin {
                 implementation(compose.ui)
                 implementation(compose.foundation)
                 implementation(compose.material3)
+                implementation(compose.materialIconsExtended)
             }
         }
 
@@ -57,6 +68,17 @@ kotlin {
                 implementation("androidx.window:window:_")
 
                 implementation(AndroidX.activity.compose)
+            }
+        }
+
+        val jvmMain by getting {
+            dependencies {
+                implementation(compose.desktop.currentOs)
+
+                // UI Window Size Classes: material3-windowsizeclass-multiplatform
+                // https://github.com/chrisbanes/material3-windowsizeclass-multiplatform
+                // Apache 2.0: https://github.com/chrisbanes/material3-windowsizeclass-multiplatform/blob/main/LICENSE
+                implementation("dev.chrisbanes.material3:material3-window-size-class-multiplatform:_")
             }
         }
     }

@@ -37,27 +37,35 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.dp
-import java.awt.Component
 import java.awt.Window
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 
+@OptIn(ExperimentalComposeUiApi::class)
 @ExperimentalMaterial3WindowSizeClassApi
 @Composable
 public actual fun calculateWindowSizeClass(): WindowSizeClass {
+    val density = LocalDensity.current
+    val containerSize = LocalWindowInfo.current.containerSize
+
+    val size = density.run { DpSize(containerSize.width.toDp(), containerSize.height.toDp()) }
+
     val window: Window? = getLocalWindow()
 
     var windowSizeClass by remember(window) {
-        mutableStateOf(WindowSizeClass.calculateFromSize(window?.getDpSize() ?: DpSize.Zero))
+        mutableStateOf(WindowSizeClass.calculateFromSize(size))
     }
 
     // Add a listener and listen for componentResized events
     DisposableEffect(window) {
         val listener = object : ComponentAdapter() {
+
             override fun componentResized(event: ComponentEvent) {
-                windowSizeClass = WindowSizeClass.calculateFromSize(window!!.getDpSize())
+                windowSizeClass = WindowSizeClass.calculateFromSize(size)
             }
         }
 
@@ -70,8 +78,6 @@ public actual fun calculateWindowSizeClass(): WindowSizeClass {
 
     return windowSizeClass
 }
-
-private fun Component.getDpSize(): DpSize = DpSize(width.dp, height.dp)
 
 /**
  * Retrieves the local [Window] value. The `androidx.compose.ui.window.LocalWindow` value is internal, so we can't
