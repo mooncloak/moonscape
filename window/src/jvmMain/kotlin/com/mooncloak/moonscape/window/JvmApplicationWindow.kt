@@ -154,7 +154,7 @@ public suspend inline fun ApplicationWindowManager.openPictureInPicture(
     onPreviewKeyEvent = onPreviewKeyEvent,
     onKeyEvent = onKeyEvent,
     validStateChanges = { placement == WindowPlacement.Floating },
-    validStyleChanges = { alwaysOnTop },
+    validStyleChanges = { alwaysOnTop && this.decoration is ApplicationWindowDecoration.Undecorated },
     content = content
 )
 
