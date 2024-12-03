@@ -1,0 +1,96 @@
+public abstract interface annotation class com/mooncloak/moonscape/window/ExperimentalMaterial3WindowSizeClassApi : java/lang/annotation/Annotation {
+}
+
+public final class com/mooncloak/moonscape/window/JvmWindowSizeClassKt {
+	public static final fun calculateWindowSizeClass (Landroidx/compose/runtime/Composer;I)Lcom/mooncloak/moonscape/window/WindowSizeClass;
+}
+
+public final class com/mooncloak/moonscape/window/WindowHeightSizeClass : java/lang/Comparable {
+	public static final field Companion Lcom/mooncloak/moonscape/window/WindowHeightSizeClass$Companion;
+	public static final synthetic fun box-impl (I)Lcom/mooncloak/moonscape/window/WindowHeightSizeClass;
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public fun compareTo-TKwGm_A (I)I
+	public static fun compareTo-TKwGm_A (II)I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ILjava/lang/Object;)Z
+	public static final fun equals-impl0 (II)Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (I)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (I)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()I
+}
+
+public final class com/mooncloak/moonscape/window/WindowHeightSizeClass$Companion {
+	public final fun getCompact-gfQjZ74 ()I
+	public final fun getDefaultSizeClasses ()Ljava/util/Set;
+	public final fun getExpanded-gfQjZ74 ()I
+	public final fun getMedium-gfQjZ74 ()I
+	public final fun getStandardSizeClasses ()Ljava/util/Set;
+}
+
+public abstract interface class com/mooncloak/moonscape/window/WindowManager {
+	public static final field Companion Lcom/mooncloak/moonscape/window/WindowManager$Companion;
+}
+
+public final class com/mooncloak/moonscape/window/WindowManager$Companion {
+}
+
+public final class com/mooncloak/moonscape/window/WindowSizeClass {
+	public static final field $stable I
+	public static final field Companion Lcom/mooncloak/moonscape/window/WindowSizeClass$Companion;
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getHeightSizeClass-gfQjZ74 ()I
+	public final fun getWidthSizeClass-x1JVeZ4 ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/mooncloak/moonscape/window/WindowSizeClass$Companion {
+	public final fun calculateFromSize-Cqks5Fs (JLandroidx/compose/ui/unit/Density;Ljava/util/Set;Ljava/util/Set;)Lcom/mooncloak/moonscape/window/WindowSizeClass;
+	public static synthetic fun calculateFromSize-Cqks5Fs$default (Lcom/mooncloak/moonscape/window/WindowSizeClass$Companion;JLandroidx/compose/ui/unit/Density;Ljava/util/Set;Ljava/util/Set;ILjava/lang/Object;)Lcom/mooncloak/moonscape/window/WindowSizeClass;
+}
+
+public final class com/mooncloak/moonscape/window/WindowTitleBarStateModel {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Landroidx/compose/ui/graphics/painter/Painter;Lkotlin/jvm/functions/Function3;)V
+	public synthetic fun <init> (Ljava/lang/String;Landroidx/compose/ui/graphics/painter/Painter;Lkotlin/jvm/functions/Function3;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Landroidx/compose/ui/graphics/painter/Painter;
+	public final fun component3 ()Lkotlin/jvm/functions/Function3;
+	public final fun copy (Ljava/lang/String;Landroidx/compose/ui/graphics/painter/Painter;Lkotlin/jvm/functions/Function3;)Lcom/mooncloak/moonscape/window/WindowTitleBarStateModel;
+	public static synthetic fun copy$default (Lcom/mooncloak/moonscape/window/WindowTitleBarStateModel;Ljava/lang/String;Landroidx/compose/ui/graphics/painter/Painter;Lkotlin/jvm/functions/Function3;ILjava/lang/Object;)Lcom/mooncloak/moonscape/window/WindowTitleBarStateModel;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Lkotlin/jvm/functions/Function3;
+	public final fun getIcon ()Landroidx/compose/ui/graphics/painter/Painter;
+	public final fun getTitle ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/mooncloak/moonscape/window/WindowWidthSizeClass : java/lang/Comparable {
+	public static final field Companion Lcom/mooncloak/moonscape/window/WindowWidthSizeClass$Companion;
+	public static final synthetic fun box-impl (I)Lcom/mooncloak/moonscape/window/WindowWidthSizeClass;
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public fun compareTo-h52uSvc (I)I
+	public static fun compareTo-h52uSvc (II)I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ILjava/lang/Object;)Z
+	public static final fun equals-impl0 (II)Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (I)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (I)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()I
+}
+
+public final class com/mooncloak/moonscape/window/WindowWidthSizeClass$Companion {
+	public final fun getCompact-x1JVeZ4 ()I
+	public final fun getDefaultSizeClasses ()Ljava/util/Set;
+	public final fun getExpanded-x1JVeZ4 ()I
+	public final fun getMedium-x1JVeZ4 ()I
+	public final fun getStandardSizeClasses ()Ljava/util/Set;
+}
+

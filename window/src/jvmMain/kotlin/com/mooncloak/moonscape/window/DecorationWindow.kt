@@ -1,5 +1,6 @@
 package com.mooncloak.moonscape.window
 
+/*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.IndicationNodeFactory
 import androidx.compose.foundation.LocalIndication
@@ -504,3 +505,4 @@ private val MacOsMinimize: ImageVector =
             close()
         }
     }
+*/

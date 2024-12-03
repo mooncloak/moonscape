@@ -6,8 +6,3 @@ public interface WindowManager {
 
     public companion object
 }
-
-@Composable
-private fun test(w: WIndowSize){
-
-}
