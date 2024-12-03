@@ -31,75 +31,25 @@
 package com.mooncloak.moonscape.window
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocal
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.unit.DpSize
-import java.awt.Window
-import java.awt.event.ComponentAdapter
-import java.awt.event.ComponentEvent
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(
+    androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi::class
+)
 @ExperimentalMaterial3WindowSizeClassApi
 @Composable
 public actual fun calculateWindowSizeClass(): WindowSizeClass {
-    val density = LocalDensity.current
-    val containerSize = LocalWindowInfo.current.containerSize
+    val windowSize = androidx.compose.material3.windowsizeclass.calculateWindowSizeClass()
 
-    val size = density.run { DpSize(containerSize.width.toDp(), containerSize.height.toDp()) }
-
-    val window: Window? = getLocalWindow()
-
-    var windowSizeClass by remember(window) {
-        mutableStateOf(WindowSizeClass.calculateFromSize(size))
-    }
-
-    // Add a listener and listen for componentResized events
-    DisposableEffect(window) {
-        val listener = object : ComponentAdapter() {
-
-            override fun componentResized(event: ComponentEvent) {
-                windowSizeClass = WindowSizeClass.calculateFromSize(size)
-            }
+    return WindowSizeClass(
+        widthSizeClass = when (windowSize.widthSizeClass) {
+            androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Compact -> WindowWidthSizeClass.Compact
+            androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Medium -> WindowWidthSizeClass.Medium
+            else -> WindowWidthSizeClass.Expanded
+        },
+        heightSizeClass = when (windowSize.heightSizeClass) {
+            androidx.compose.material3.windowsizeclass.WindowHeightSizeClass.Compact -> WindowHeightSizeClass.Compact
+            androidx.compose.material3.windowsizeclass.WindowHeightSizeClass.Medium -> WindowHeightSizeClass.Medium
+            else -> WindowHeightSizeClass.Expanded
         }
-
-        window?.addComponentListener(listener)
-
-        onDispose {
-            window?.removeComponentListener(listener)
-        }
-    }
-
-    return windowSizeClass
-}
-
-/**
- * Retrieves the local [Window] value. The `androidx.compose.ui.window.LocalWindow` value is internal, so we can't
- * access it normally. So, we attempt to use reflection to obtain the value.
- *
- * FIXME: Hopefully they make this not internal, make a calculateWindowSizeClass function in the common source set
- * available, or consider depending on the (now deprecated) material3-windowsizeclass-multiplatform library, just in
- * this JVM source set, to obtain the window size class of that library and map to our instance.
- */
-@Suppress("UNCHECKED_CAST")
-@Composable
-private fun getLocalWindow(): Window? {
-    val localWindow = try {
-        val localWindowClass = Class.forName("androidx.compose.ui.window.LocalWindow")
-        val localWindowProperty = localWindowClass.getDeclaredField("LocalWindow").apply {
-            this.isAccessible = true
-        }
-
-        localWindowProperty.get(null) as? CompositionLocal<Window>
-    } catch (e: Exception) {
-        null
-    }
-
-    return localWindow?.current
+    )
 }

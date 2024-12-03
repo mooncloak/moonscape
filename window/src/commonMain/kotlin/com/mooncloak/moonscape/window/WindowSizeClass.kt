@@ -63,7 +63,7 @@ public expect fun calculateWindowSizeClass(): WindowSizeClass
  * @property heightSizeClass height-based window size class ([WindowHeightSizeClass])
  */
 @Immutable
-public class WindowSizeClass private constructor(
+public class WindowSizeClass internal constructor(
     public val widthSizeClass: WindowWidthSizeClass,
     public val heightSizeClass: WindowHeightSizeClass,
 ) {
