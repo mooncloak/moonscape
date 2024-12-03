@@ -2,6 +2,7 @@ package com.mooncloak.moonscape.window
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
 
 @Stable
 public actual sealed interface ApplicationWindow {
@@ -24,11 +25,28 @@ public actual sealed interface ApplicationWindowManager {
 }
 
 @Composable
-public actual fun rememberApplicationWindowManager(): ApplicationWindowManager = TODO()
+public actual fun rememberApplicationWindowManager(): ApplicationWindowManager =
+    remember { ApplicationWindowManagerSingleton }
 
 @Composable
 public actual fun ApplicationWindowContainer(
     manager: ApplicationWindowManager
 ) {
+    // No operation.
+}
 
+@Stable
+internal data object ApplicationWindowSingleton : ApplicationWindow {
+
+    override val id: String = "singleton"
+
+    override val type: Any? = null
+
+    override val style: ApplicationWindowStyle? = null
+}
+
+@Stable
+internal data object ApplicationWindowManagerSingleton : ApplicationWindowManager {
+
+    override val windows: List<ApplicationWindow> = listOf(ApplicationWindowSingleton)
 }
