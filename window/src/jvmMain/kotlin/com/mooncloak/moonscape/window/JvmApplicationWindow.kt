@@ -8,10 +8,15 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowDecorationDefaults
 import androidx.compose.ui.window.WindowPlacement
+import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.WindowState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,7 +35,7 @@ public actual sealed interface ApplicationWindow {
 
     public actual val style: ApplicationWindowStyle?
 
-    public val state: WindowState
+    public val state: ApplicationWindowState
 
     public val onPreviewKeyEvent: (KeyEvent) -> Boolean
 
@@ -38,28 +43,28 @@ public actual sealed interface ApplicationWindow {
 
     public val content: @Composable FrameWindowScope.() -> Unit
 
-    public suspend fun updateStyle(block: ApplicationWindowStyle.() -> ApplicationWindowStyle)
+    public suspend fun updateStyle(block: ApplicationWindowStyle.() -> ApplicationWindowStyle): Boolean
 
-    public suspend fun hide() {
-        updateStyle { this.copy(visible = false) }
-    }
-
-    public suspend fun show() {
-        updateStyle { this.copy(visible = true) }
-    }
-
-    public suspend fun toggleVisibility() {
-        if (style?.visible == true) {
-            hide()
-        } else {
-            show()
-        }
-    }
-
-    public suspend fun toggleMinimized()
+    public suspend fun updateState(block: WindowState.() -> Unit): Boolean
 
     public actual companion object
 }
+
+public suspend inline fun ApplicationWindow.hide(): Boolean =
+    updateStyle { this.copy(visible = false) }
+
+public suspend inline fun ApplicationWindow.show(): Boolean =
+    updateStyle { this.copy(visible = true) }
+
+public suspend inline fun ApplicationWindow.toggleVisibility(): Boolean =
+    if (style?.visible == true) {
+        hide()
+    } else {
+        show()
+    }
+
+public suspend inline fun ApplicationWindow.toggleMinimized(): Boolean =
+    updateState { this.isMinimized = !this.isMinimized }
 
 @Stable
 public actual sealed interface ApplicationWindowManager {
@@ -76,6 +81,8 @@ public actual sealed interface ApplicationWindowManager {
         state: WindowState = WindowState(),
         onPreviewKeyEvent: (KeyEvent) -> Boolean = { false },
         onKeyEvent: (KeyEvent) -> Boolean = { false },
+        validStateChanges: ApplicationWindowState.() -> Boolean = { true },
+        validStyleChanges: ApplicationWindowStyle.() -> Boolean = { true },
         content: @Composable FrameWindowScope.() -> Unit
     ): ApplicationWindow
 
@@ -85,6 +92,71 @@ public actual sealed interface ApplicationWindowManager {
 
     public actual companion object
 }
+
+/**
+ * Represents a wrapper around the [WindowState] to make the [WindowState] immutable so the [ApplicationWindow] can
+ * regulate the changes through its [ApplicationWindow.updateState] function.
+ */
+@Stable
+public class ApplicationWindowState internal constructor(
+    @PublishedApi internal val windowState: WindowState
+) {
+
+    /**
+     * Retrieves the current [WindowState.placement] value.
+     */
+    public val placement: WindowPlacement inline get() = windowState.placement
+
+    /**
+     * Retrieves the current [WindowState.isMinimized] value.
+     */
+    public val isMinimized: Boolean inline get() = windowState.isMinimized
+
+    /**
+     * Retrieves the current [WindowState.position] value.
+     */
+    public val position: WindowPosition inline get() = windowState.position
+
+    /**
+     * Retrieves the current [WindowState.size] value.
+     */
+    public val size: DpSize inline get() = windowState.size
+}
+
+@OptIn(ExperimentalUuidApi::class, ExperimentalComposeUiApi::class)
+public suspend inline fun ApplicationWindowManager.openPictureInPicture(
+    id: String? = Uuid.random().toHexString(),
+    isMinimized: Boolean = false,
+    position: WindowPosition = WindowPosition.PlatformDefault,
+    size: DpSize = DpSize(width = 300.dp, height = 200.dp),
+    visible: Boolean = true,
+    noinline onPreviewKeyEvent: (KeyEvent) -> Boolean = { false },
+    noinline onKeyEvent: (KeyEvent) -> Boolean = { false },
+    noinline content: @Composable FrameWindowScope.() -> Unit
+): ApplicationWindow = open(
+    id = id,
+    type = PictureInPictureModeWindowType,
+    style = ApplicationWindowStyle(
+        decoration = ApplicationWindowDecoration.Undecorated(resizerThickness = WindowDecorationDefaults.ResizerThickness),
+        visible = visible,
+        transparent = false,
+        resizable = true,
+        enabled = true,
+        focusable = true,
+        alwaysOnTop = true
+    ),
+    state = WindowState(
+        position = position,
+        placement = WindowPlacement.Floating,
+        isMinimized = isMinimized,
+        size = size
+    ),
+    onPreviewKeyEvent = onPreviewKeyEvent,
+    onKeyEvent = onKeyEvent,
+    validStateChanges = { placement == WindowPlacement.Floating },
+    validStyleChanges = { alwaysOnTop },
+    content = content
+)
 
 @Composable
 public actual fun rememberApplicationWindowManager(): ApplicationWindowManager =
@@ -110,10 +182,14 @@ public actual fun ApplicationWindowContainer(
                 }
             },
             onToggleMaximize = {
-                window.state.placement = if (window.state.placement == WindowPlacement.Floating) {
-                    WindowPlacement.Maximized
-                } else {
-                    WindowPlacement.Floating
+                coroutineScope.launch {
+                    window.updateState {
+                        this.placement = if (window.state.placement == WindowPlacement.Floating) {
+                            WindowPlacement.Maximized
+                        } else {
+                            WindowPlacement.Floating
+                        }
+                    }
                 }
             }
         )
@@ -138,7 +214,7 @@ internal fun ApplicationWindowContent(
                     onToggleMaximize = onToggleMaximize,
                     title = decoration.title,
                     icon = decoration.icon,
-                    state = window.state,
+                    state = window.state.windowState,
                     visible = style.visible,
                     transparent = style.transparent,
                     resizable = style.resizable,
@@ -156,7 +232,7 @@ internal fun ApplicationWindowContent(
             is ApplicationWindowDecoration.Undecorated -> {
                 Window(
                     onCloseRequest = onCloseRequest,
-                    state = window.state,
+                    state = window.state.windowState,
                     visible = style.visible,
                     undecorated = true,
                     transparent = style.transparent,
@@ -173,7 +249,7 @@ internal fun ApplicationWindowContent(
             is ApplicationWindowDecoration.System -> {
                 Window(
                     onCloseRequest = onCloseRequest,
-                    state = window.state,
+                    state = window.state.windowState,
                     visible = style.visible,
                     title = decoration.title,
                     icon = decoration.icon,
@@ -192,7 +268,7 @@ internal fun ApplicationWindowContent(
             else -> {
                 Window(
                     onCloseRequest = onCloseRequest,
-                    state = window.state,
+                    state = window.state.windowState,
                     visible = style.visible,
                     undecorated = false,
                     transparent = style.transparent,
@@ -216,26 +292,32 @@ internal operator fun ApplicationWindow.Companion.invoke(
     state: WindowState,
     onPreviewKeyEvent: (KeyEvent) -> Boolean = { false },
     onKeyEvent: (KeyEvent) -> Boolean = { false },
+    validStateChanges: ApplicationWindowState.() -> Boolean = { true },
+    validStyleChanges: ApplicationWindowStyle.() -> Boolean = { true },
     content: @Composable FrameWindowScope.() -> Unit
 ): ApplicationWindow = JvmApplicationWindow(
     id = id,
     type = type,
     initialStyle = style,
-    state = state,
+    state = ApplicationWindowState(windowState = state),
     onPreviewKeyEvent = onPreviewKeyEvent,
     onKeyEvent = onKeyEvent,
+    validStateChanges = validStateChanges,
+    validStyleChanges = validStyleChanges,
     content = content
 )
 
 @Stable
-internal class JvmApplicationWindow internal constructor(
+internal open class JvmApplicationWindow internal constructor(
     override val id: String?,
     override val type: ApplicationWindowType,
     initialStyle: ApplicationWindowStyle?,
-    override val state: WindowState,
+    override val state: ApplicationWindowState,
     override val onPreviewKeyEvent: (KeyEvent) -> Boolean = { false },
     override val onKeyEvent: (KeyEvent) -> Boolean = { false },
-    override val content: @Composable FrameWindowScope.() -> Unit
+    override val content: @Composable FrameWindowScope.() -> Unit,
+    private val validStateChanges: ApplicationWindowState.() -> Boolean = { true },
+    private val validStyleChanges: ApplicationWindowStyle.() -> Boolean = { true }
 ) : ApplicationWindow {
 
     private val mutableStyle = mutableStateOf(initialStyle)
@@ -244,23 +326,47 @@ internal class JvmApplicationWindow internal constructor(
 
     private val mutex = Mutex(locked = false)
 
-    override suspend fun updateStyle(block: ApplicationWindowStyle.() -> ApplicationWindowStyle) {
+    override suspend fun updateStyle(block: ApplicationWindowStyle.() -> ApplicationWindowStyle): Boolean =
         mutex.withLock {
             withContext(Dispatchers.Main) {
                 val currentStyle = style ?: ApplicationWindowStyle()
 
-                mutableStyle.value = currentStyle.block()
+                val updatedStyle = currentStyle.block()
+
+                val validChanges = validStyleChanges.invoke(updatedStyle)
+
+                if (validChanges) {
+                    mutableStyle.value = updatedStyle
+                }
+
+                return@withContext validChanges
             }
         }
-    }
 
-    override suspend fun toggleMinimized() {
+    override suspend fun updateState(block: WindowState.() -> Unit): Boolean =
         mutex.withLock {
             withContext(Dispatchers.Main) {
-                state.isMinimized = !state.isMinimized
+                val updatedWindowState = WindowState(
+                    placement = state.placement,
+                    isMinimized = state.isMinimized,
+                    position = state.position,
+                    size = state.size
+                ).apply(block)
+
+                val updatedState = ApplicationWindowState(windowState = updatedWindowState)
+
+                val validChanges = validStateChanges.invoke(updatedState)
+
+                if (validChanges) {
+                    state.windowState.placement = updatedWindowState.placement
+                    state.windowState.isMinimized = updatedWindowState.isMinimized
+                    state.windowState.position = updatedWindowState.position
+                    state.windowState.size = updatedWindowState.size
+                }
+
+                return@withContext validChanges
             }
         }
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -280,7 +386,7 @@ internal class JvmApplicationWindow internal constructor(
 
     override fun hashCode(): Int {
         var result = id?.hashCode() ?: 0
-        result = 31 * result + (type?.hashCode() ?: 0)
+        result = 31 * result + (type.hashCode())
         result = 31 * result + state.hashCode()
         result = 31 * result + onPreviewKeyEvent.hashCode()
         result = 31 * result + onKeyEvent.hashCode()
@@ -323,6 +429,8 @@ internal class JvmApplicationWindowManager internal constructor(
         state: WindowState,
         onPreviewKeyEvent: (KeyEvent) -> Boolean,
         onKeyEvent: (KeyEvent) -> Boolean,
+        validStateChanges: ApplicationWindowState.() -> Boolean,
+        validStyleChanges: ApplicationWindowStyle.() -> Boolean,
         content: @Composable FrameWindowScope.() -> Unit
     ): ApplicationWindow {
         mutex.withLock {
@@ -334,6 +442,8 @@ internal class JvmApplicationWindowManager internal constructor(
                 state = state,
                 onPreviewKeyEvent = onPreviewKeyEvent,
                 onKeyEvent = onKeyEvent,
+                validStateChanges = validStateChanges,
+                validStyleChanges = validStyleChanges,
                 content = content
             )
 
