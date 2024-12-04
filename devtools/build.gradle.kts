@@ -13,16 +13,6 @@ plugins {
 }
 
 kotlin {
-    configure(targets) {
-        if (this is KotlinNativeTarget && konanTarget.family == Family.IOS) {
-            compilations.getByName("main") {
-                val objc by cinterops.creating {
-                    defFile(project.file("src/iosMain/def/objc.def"))
-                }
-            }
-        }
-    }
-
     sourceSets {
         all {
             // Disable warnings and errors related to these expected @OptIn annotations.
@@ -60,31 +50,12 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-
-        val androidMain by getting {
-            dependencies {
-                implementation("androidx.window:window:_")
-
-                implementation(AndroidX.activity.compose)
-            }
-        }
-
-        val jvmMain by getting {
-            dependencies {
-                implementation(compose.desktop.currentOs)
-
-                // UI Window Size Classes: material3-windowsizeclass-multiplatform
-                // https://github.com/chrisbanes/material3-windowsizeclass-multiplatform
-                // Apache 2.0: https://github.com/chrisbanes/material3-windowsizeclass-multiplatform/blob/main/LICENSE
-                implementation("dev.chrisbanes.material3:material3-window-size-class-multiplatform:_")
-            }
-        }
     }
 }
 
 android {
     compileSdk = LibraryConstants.Android.compileSdkVersion
-    namespace = "com.mooncloak.moonscape.browser"
+    namespace = "com.mooncloak.moonscape.devtools"
 
     defaultConfig {
         minSdk = LibraryConstants.Android.minSdkVersion
