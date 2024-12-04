@@ -56,8 +56,8 @@ import androidx.compose.ui.window.WindowDecorationDefaults
 import androidx.compose.ui.window.WindowScope
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.rememberWindowState
-import com.mooncloak.moonscape.platform.ComposeRuntimePlatform
-import com.mooncloak.moonscape.platform.current
+import com.mooncloak.moonscape.browser.platform.ComposeRuntimePlatform
+import com.mooncloak.moonscape.browser.platform.current
 
 /**
  * Represents an "undecorated", mooncloak themed Window that allows for custom decorations for the
