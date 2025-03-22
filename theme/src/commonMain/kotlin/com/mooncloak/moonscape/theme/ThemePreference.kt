@@ -10,13 +10,8 @@ import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mooncloak.moonscape.theme.generated.resources.Res
-import com.mooncloak.moonscape.theme.generated.resources.preference_theme_dark
-import com.mooncloak.moonscape.theme.generated.resources.preference_theme_light
-import com.mooncloak.moonscape.theme.generated.resources.preference_theme_system
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import org.jetbrains.compose.resources.stringResource
 
 @Immutable
 @Serializable
@@ -48,9 +43,9 @@ public enum class ThemePreference(
 public val ThemePreference.title: String
     @Composable
     get() = when (this) {
-        ThemePreference.Dark -> stringResource(Res.string.preference_theme_dark)
-        ThemePreference.Light -> stringResource(Res.string.preference_theme_light)
-        ThemePreference.System -> stringResource(Res.string.preference_theme_system)
+        ThemePreference.Dark -> "Dark" // TODO: Re-enable when resources can be imported with a library module: stringResource(Res.string.preference_theme_dark)
+        ThemePreference.Light -> "Light" // TODO: Re-enable when resources can be imported with a library module: stringResource(Res.string.preference_theme_light)
+        ThemePreference.System -> "System" // TODO: Re-enable when resources can be imported with a library module: stringResource(Res.string.preference_theme_system)
     }
 
 public val ThemePreference.icon: ImageVector

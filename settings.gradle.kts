@@ -32,6 +32,7 @@ plugins {
 rootProject.name = "moonscape"
 
 include(":theme")
+include(":snackbar")
 include(":webview-core")
 // TODO: Re-enable: include(":browser-core")
 // TODO: Re-enable: include(":browser-devtools")

@@ -23,8 +23,6 @@ kotlin {
                 enabled = false
             }
         }
-
-        binaries.executable()
     }
 
     @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
@@ -40,8 +38,6 @@ kotlin {
                 enabled = false
             }
         }
-
-        binaries.executable()
     }
 
     macosX64()

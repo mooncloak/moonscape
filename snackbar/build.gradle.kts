@@ -23,20 +23,16 @@ kotlin {
 
         val commonMain by getting {
             dependencies {
+                api(project(":theme"))
+
                 // Coroutines
                 // https://github.com/Kotlin/kotlinx.coroutines
                 implementation(KotlinX.coroutines.core)
-
-                // Serialization
-                // https://github.com/Kotlin/kotlinx.serialization
-                implementation(KotlinX.serialization.json)
 
                 // Declarative UI - Compose Multiplatform
                 implementation(compose.runtime)
                 implementation(compose.ui)
                 implementation(compose.material3)
-                implementation(compose.materialIconsExtended)
-                implementation(compose.components.resources)
             }
         }
 
@@ -50,7 +46,7 @@ kotlin {
 
 android {
     compileSdk = LibraryConstants.Android.compileSdkVersion
-    namespace = "com.mooncloak.moonscape.theme"
+    namespace = "com.mooncloak.moonscape.snackbar"
 
     defaultConfig {
         minSdk = LibraryConstants.Android.minSdkVersion
