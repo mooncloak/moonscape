@@ -26,7 +26,7 @@ class BuildVariables internal constructor(
         get() = kenv["version"].value
 
     val versionCode: Int
-        get() = TODO("Use git commit count.")
+        get() = getCommitCount()
 }
 
 val Project.buildVariables: BuildVariables

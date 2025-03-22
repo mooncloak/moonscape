@@ -65,7 +65,7 @@ afterEvaluate {
 fun MavenPublication.mavenCentralPom() {
     pom {
         name.set("moonscape")
-        description.set("Browser UI components for Compose Multiplatform.")
+        description.set("Mooncloak UI and theme components for Compose Multiplatform.")
         url.set("https://github.com/mooncloak/moonscape")
 
         organization {

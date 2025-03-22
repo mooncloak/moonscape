@@ -8,7 +8,7 @@ contact:
       website: "https://kodetools.mooncloak.codes"
 title: "moonscape"
 type: "software"
-abstract: "Browser UI components for Compose Multiplatform."
+abstract: "Mooncloak UI and theme components for Compose Multiplatform."
 license: "Apache-2.0"
 keywords:
     - "kotlin"
@@ -17,6 +17,8 @@ keywords:
     - "webview"
     - "web"
     - "browser"
+    - "theme"
+    - "design"
     - "moonscape"
 repository-code: "https://github.com/mooncloak/moonscape"
 url: "https://github.com/mooncloak/moonscape"

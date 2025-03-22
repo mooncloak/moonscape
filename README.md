@@ -1,6 +1,6 @@
 # moonscape
 
-Browser UI components for Compose Multiplatform.
+Mooncloak UI and theme components for Compose Multiplatform.
 
 <img alt="GitHub tag (latest by date)" src="https://img.shields.io/github/v/tag/mooncloak/moonscape">
 
@@ -51,15 +51,6 @@ the [code of conduct](CODE_OF_CONDUCT.md)
 and [coding conventions](CODING_CONVENTIONS.md) when contributing. If contributing code, please add
 thorough documents
 and tests. Thank you!
-
-## Inspiration 🧠
-
-This project was inspired by, yet completely independent of, the following open source projects:
-
-| Project                                                                                     | Language | License                                                                                        |
-|---------------------------------------------------------------------------------------------|----------|------------------------------------------------------------------------------------------------|
-| [accompanist](https://github.com/google/accompanist)                                        | Kotlin   | [Apache 2.0](https://github.com/google/accompanist/blob/main/LICENSE)                          |
-| [compose-webview-multiplatform](https://github.com/KevinnZou/compose-webview-multiplatform) | Kotlin   | [Apache 2.0](https://github.com/KevinnZou/compose-webview-multiplatform/blob/main/LICENSE.txt) |
 
 ## License ⚖️
 
