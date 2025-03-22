@@ -1,0 +1,7 @@
+<resources>
+
+    <string name="preference_theme_dark">Dark</string>
+    <string name="preference_theme_light">Light</string>
+    <string name="preference_theme_system">System</string>
+
+</resources>
