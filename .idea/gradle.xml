@@ -24,6 +24,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/snackbar" />
+            <option value="$PROJECT_DIR$/text" />
             <option value="$PROJECT_DIR$/theme" />
             <option value="$PROJECT_DIR$/webview-core" />
           </set>
