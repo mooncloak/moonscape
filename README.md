@@ -29,7 +29,7 @@ repositories {
 ### Dependencies
 
 ```kotlin
-implementation("com.mooncloak.moonscape:webview-core:VERSION")
+implementation("com.mooncloak.moonscape:core:VERSION")
 ```
 
 ## Documentation 📃
