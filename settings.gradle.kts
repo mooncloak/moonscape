@@ -31,6 +31,7 @@ plugins {
 
 rootProject.name = "moonscape"
 
+include(":core")
 include(":theme")
 include(":text")
 include(":snackbar")
